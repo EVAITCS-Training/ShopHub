@@ -8,6 +8,8 @@ import com.evaitcsmatt.shoppinghub.console.entities.Store;
 import com.evaitcsmatt.shoppinghub.console.exceptions.ProductNotFoundException;
 import com.evaitcsmatt.shoppinghub.console.repository.ProductRepository;
 
+import jakarta.annotation.PostConstruct;
+
 @Service
 public class PeusdoShopServiceImpl implements ShopService {
 	
@@ -16,16 +18,38 @@ public class PeusdoShopServiceImpl implements ShopService {
 	private ShoppingCart shoppingCart;
 	private boolean didStoreUpdate;
 	
+	/**
+	 * Constructs a new PeusdoShopServiceImpl instance and initializes the shopping service components.
+	 * <p>
+	 * This constructor performs the following initialization steps:
+	 * <ul>
+	 *   <li>Injects the provided ProductRepository dependency</li>
+	 *   <li>Creates a new Store instance for managing product inventory</li>
+	 *   <li>Creates a new ShoppingCart instance for user cart operations</li>
+	 *   <li>Initializes the store update flag to false</li>
+	 *   <li>Populates the store with all existing products from the repository</li>
+	 * </ul>
+	 * 
+	 * <p><strong>Note:</strong> This constructor eagerly loads all products from the repository
+	 * into the store during initialization. For large product catalogs, consider implementing
+	 * lazy loading or pagination to improve startup performance.
+	 *
+	 * @param productRepository the repository for accessing product data; must not be null
+	 * @throws IllegalArgumentException if productRepository is null
+	 * @throws RuntimeException if there's an error loading products from the repository
+	 * 
+	 * @see Store#addProduct(Object, int)
+	 * @see ProductRepository#findAll()
+	 * @since 1.0
+	 */
 	public PeusdoShopServiceImpl(ProductRepository productRepository) {
 		this.productRepository = productRepository;
 		this.store = new Store();
 		this.shoppingCart = new ShoppingCart();
 		this.didStoreUpdate = false;
-		System.out.println("filling store");
-		this.productRepository.findAll().forEach(item -> {
-			this.store.addProduct(item, item.getQuantity());
-		});
+		
 	}
+	
 
 	@Override
 	public void addItemToCart(Product product, int quantity) {
@@ -74,6 +98,14 @@ public class PeusdoShopServiceImpl implements ShopService {
 	@Override
 	public void displayShop() {
 		store.displayProducts();
+	}
+	
+	
+	public void initStore() {
+		System.out.println("filling store");
+		this.productRepository.findAll().forEach(item -> {
+			this.store.addProduct(item, item.getQuantity());
+		});
 	}
 
 }

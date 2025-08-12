@@ -12,6 +12,7 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import com.evaitcsmatt.shoppinghub.console.entities.Product;
 import com.evaitcsmatt.shoppinghub.console.repository.ProductRepository;
 import com.evaitcsmatt.shoppinghub.console.repository.SimpleJpaConfig;
+import com.evaitcsmatt.shoppinghub.console.service.PeusdoShopServiceImpl;
 import com.evaitcsmatt.shoppinghub.console.service.ShopService;
 
 import jakarta.persistence.EntityManager;
@@ -37,15 +38,11 @@ public class App
     	ProductRepository productRepo = context.getBean(ProductRepository.class);
     	EntityManagerFactory emf = context.getBean(EntityManagerFactory.class);
     	EntityManager em = emf.createEntityManager();
-    	
-    	Product redApple = new Product("Red Apple", 0.79);
-    	Product oragne = new Product("Orange", 1.25);
-    	Product greenApple = new Product("Granny Smith Apple", 0.79);
-    	productRepo.saveAll(List.of(redApple, oragne, greenApple));
-    	
+    	Product product = new Product("Garden Gloves", 5.99, 40);
     	ShopService service = context.getBean(ShopService.class);
+    	((PeusdoShopServiceImpl) service).initStore();
     	service.displayShop();
-    	service.addItemToCart(greenApple, 3);
+    	service.addItemToCart(product, 3);
     	
     	System.out.println(productRepo.findByNameLike("%Apple%"));
     }

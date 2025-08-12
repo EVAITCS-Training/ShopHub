@@ -6,6 +6,7 @@ import javax.sql.DataSource;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.jpa.JpaTransactionManager;
@@ -15,6 +16,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import com.evaitcsmatt.shoppinghub.console.service.PeusdoShopServiceImpl;
 import com.evaitcsmatt.shoppinghub.console.service.ShopService;
+import com.evaitcsmatt.shoppinghub.console.utils.DataInitializer;
 
 import jakarta.persistence.EntityManagerFactory;
 
@@ -24,6 +26,7 @@ import jakarta.persistence.EntityManagerFactory;
 public class SimpleJpaConfig {
 	
 	@Bean
+	@DependsOn("dataInitializer")
 	public ShopService shopService(ProductRepository productRepository) {
 		return new PeusdoShopServiceImpl(productRepository);
 	}
@@ -63,5 +66,11 @@ public class SimpleJpaConfig {
 		props.setProperty("hibernate.show_sql", "true");
 		props.setProperty("hibernate.format_sql", "true");
 		return props;
+	}
+	
+	@Bean
+	@DependsOn("transactionManager")
+	public DataInitializer dataInitializer(ProductRepository productRepository) {
+		return new DataInitializer(productRepository);
 	}
 }

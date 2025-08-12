@@ -64,22 +64,20 @@ public class Product implements Serializable {
 	}
 
 	@Override
-	public int hashCode() {
-		return Objects.hash(id, name, price);
-	}
+    public int hashCode() {
+        return Objects.hash(name);
+    }
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Product other = (Product) obj;
-		return id == other.id && Objects.equals(name, other.name)
-				&& Double.doubleToLongBits(price) == Double.doubleToLongBits(other.price);
-	}
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        
+        Product product = (Product) obj;
+        
+        // Compare by name (or ID if available)
+        return Objects.equals(name, product.name);
+    }
 
 	@Override
 	public String toString() {
