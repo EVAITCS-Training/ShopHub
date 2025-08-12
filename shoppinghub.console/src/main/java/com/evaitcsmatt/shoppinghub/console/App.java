@@ -42,6 +42,7 @@ public class App
     	Product oragne = new Product("Orange", 1.25);
     	Product greenApple = new Product("Granny Smith Apple", 0.79);
     	productRepo.saveAll(List.of(redApple, oragne, greenApple));
+    	
     	ShopService service = context.getBean(ShopService.class);
     	service.displayShop();
     	service.addItemToCart(greenApple, 3);
