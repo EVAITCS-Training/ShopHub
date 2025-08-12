@@ -15,6 +15,14 @@ public class ShoppingCart {
 		this.cart = cart;
 	}
 	
+	public List<CartItem> getCart() {
+		return cart;
+	}
+
+	public void setCart(List<CartItem> cart) {
+		this.cart = cart;
+	}
+
 	public void addItem(Product product, int quantity) {
 		for (CartItem item : cart) {
 			if(item.getProduct().getId() == product.getId()) {

@@ -16,13 +16,21 @@ public class Store {
 	}
 	
 	public void addProduct(Product product, int quantity) {
-		products.putIfAbsent(product, quantity);
+		products.put(product, quantity);
 	}
 	
 	public void displayProducts() {
 		for (Product product : products.keySet()) {
 			System.out.println(product.getName() + ", " + product.getPrice() + ", " + products.get(product));
 		}
+	}
+	
+	public Map<Product, Integer> getStoreInventory() {
+		return products;
+	}
+	
+	public boolean hasProduct(Product product) {
+		return products.containsKey(product);
 	}
 
 	@Override
