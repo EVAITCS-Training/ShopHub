@@ -3,6 +3,7 @@ package com.evaitcsmatt.shoppinghub.console.entities;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * Represents a shopping cart containing a list of cart items.
@@ -67,11 +68,7 @@ public class ShoppingCart {
      * @param quantity the quantity to remove
      */
     public void removeItem(Product product, int quantity) {
-        for (CartItem item : cart) {
-            if(item.getProduct().getId() == product.getId()) {
-                item.setQuantity(item.getQuantity() - quantity);
-            }
-        }
+        cart.removeIf(item -> item.getProduct().equals(product));
     }
 
     /**
@@ -100,6 +97,15 @@ public class ShoppingCart {
         for(CartItem item : cart) {
             System.out.println(item.toString());
         }
+    }
+    
+    public Optional<CartItem> findItem(Product product){
+        for(CartItem item : cart) {
+            if (item.getProduct().getName().equalsIgnoreCase(product.getName())) {
+                return Optional.of(item);
+            }
+        }
+        return Optional.empty();
     }
 
     @Override

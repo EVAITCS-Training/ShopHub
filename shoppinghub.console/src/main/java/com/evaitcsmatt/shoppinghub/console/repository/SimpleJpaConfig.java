@@ -1,6 +1,7 @@
 package com.evaitcsmatt.shoppinghub.console.repository;
 
 import java.util.Properties;
+import java.util.Scanner;
 
 import javax.sql.DataSource;
 
@@ -14,6 +15,7 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+import com.evaitcsmatt.shoppinghub.console.controllers.MainController;
 import com.evaitcsmatt.shoppinghub.console.service.PeusdoShopServiceImpl;
 import com.evaitcsmatt.shoppinghub.console.service.ShopService;
 import com.evaitcsmatt.shoppinghub.console.utils.DataInitializer;
@@ -28,6 +30,16 @@ import jakarta.persistence.EntityManagerFactory;
 @EnableJpaRepositories 
 @EnableTransactionManagement
 public class SimpleJpaConfig {
+	
+	@Bean
+	public Scanner scanner() {
+		return new Scanner(System.in);
+	}
+	
+	@Bean
+	public MainController mainController(ShopService shopService, Scanner scanner) {
+		return new MainController(shopService, scanner);
+	}
     /**
      * Creates the ShopService bean, depending on data initialization.
      * @param productRepository the product repository
@@ -35,8 +47,8 @@ public class SimpleJpaConfig {
      */
     @Bean
     @DependsOn("dataInitializer")
-    public ShopService shopService(ProductRepository productRepository) {
-        return new PeusdoShopServiceImpl(productRepository);
+    public ShopService shopService(ProductRepository productRepository, OrderRepository orderRepository) {
+        return new PeusdoShopServiceImpl(productRepository, orderRepository);
     }
 
     /**

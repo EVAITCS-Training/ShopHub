@@ -40,7 +40,7 @@ public interface ShopService {
      * Completes the order for the given shopping cart.
      * @param cart the shopping cart to complete the order for
      */
-    void completeOrder(ShoppingCart cart);
+    void completeOrder();
 
     /**
      * Clears all items from the shopping cart.
@@ -58,4 +58,5 @@ public interface ShopService {
      * Displays all products in the shop.
      */
     void displayShop();
+    void displayCart();
 }

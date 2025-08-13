@@ -1,0 +1,15 @@
+C:\Users\Legio\source\repos\ShopHub\shoppinghub.console\src\main\java\com\evaitcsmatt\shoppinghub\console\App.java
+C:\Users\Legio\source\repos\ShopHub\shoppinghub.console\src\main\java\com\evaitcsmatt\shoppinghub\console\controllers\MainController.java
+C:\Users\Legio\source\repos\ShopHub\shoppinghub.console\src\main\java\com\evaitcsmatt\shoppinghub\console\entities\CartItem.java
+C:\Users\Legio\source\repos\ShopHub\shoppinghub.console\src\main\java\com\evaitcsmatt\shoppinghub\console\entities\Order.java
+C:\Users\Legio\source\repos\ShopHub\shoppinghub.console\src\main\java\com\evaitcsmatt\shoppinghub\console\entities\Product.java
+C:\Users\Legio\source\repos\ShopHub\shoppinghub.console\src\main\java\com\evaitcsmatt\shoppinghub\console\entities\ShoppingCart.java
+C:\Users\Legio\source\repos\ShopHub\shoppinghub.console\src\main\java\com\evaitcsmatt\shoppinghub\console\entities\Store.java
+C:\Users\Legio\source\repos\ShopHub\shoppinghub.console\src\main\java\com\evaitcsmatt\shoppinghub\console\exceptions\ProductNotFoundException.java
+C:\Users\Legio\source\repos\ShopHub\shoppinghub.console\src\main\java\com\evaitcsmatt\shoppinghub\console\repository\OrderRepository.java
+C:\Users\Legio\source\repos\ShopHub\shoppinghub.console\src\main\java\com\evaitcsmatt\shoppinghub\console\repository\ProductRepository.java
+C:\Users\Legio\source\repos\ShopHub\shoppinghub.console\src\main\java\com\evaitcsmatt\shoppinghub\console\repository\SimpleJpaConfig.java
+C:\Users\Legio\source\repos\ShopHub\shoppinghub.console\src\main\java\com\evaitcsmatt\shoppinghub\console\service\PeusdoShopServiceImpl.java
+C:\Users\Legio\source\repos\ShopHub\shoppinghub.console\src\main\java\com\evaitcsmatt\shoppinghub\console\service\ShopService.java
+C:\Users\Legio\source\repos\ShopHub\shoppinghub.console\src\main\java\com\evaitcsmatt\shoppinghub\console\utils\DataInitializer.java
+C:\Users\Legio\source\repos\ShopHub\shoppinghub.console\src\main\java\com\evaitcsmatt\shoppinghub\console\utils\LoggingAspects.java
