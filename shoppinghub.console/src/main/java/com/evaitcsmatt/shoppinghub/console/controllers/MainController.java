@@ -47,7 +47,7 @@ public class MainController {
 		}
 	}
 	
-	private void postNewCartItem() {
+	public void postNewCartItem() {
 		Product product = new Product();
 		int quantity;
 		scanner.nextLine();

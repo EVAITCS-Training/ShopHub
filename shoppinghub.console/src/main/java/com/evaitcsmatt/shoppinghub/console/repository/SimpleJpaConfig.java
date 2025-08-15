@@ -1,13 +1,17 @@
 package com.evaitcsmatt.shoppinghub.console.repository;
 
+
 import java.util.Properties;
 import java.util.Scanner;
 
 import javax.sql.DataSource;
 
+
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.jpa.JpaTransactionManager;
@@ -19,7 +23,12 @@ import com.evaitcsmatt.shoppinghub.console.controllers.MainController;
 import com.evaitcsmatt.shoppinghub.console.service.PeusdoShopServiceImpl;
 import com.evaitcsmatt.shoppinghub.console.service.ShopService;
 import com.evaitcsmatt.shoppinghub.console.utils.DataInitializer;
+import com.evaitcsmatt.shoppinghub.console.utils.LoggingAspects;
 
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.Logger;
+import ch.qos.logback.classic.LoggerContext;
+import jakarta.annotation.PostConstruct;
 import jakarta.persistence.EntityManagerFactory;
 
 /**
@@ -27,7 +36,8 @@ import jakarta.persistence.EntityManagerFactory;
  * and application beans for the shopping hub application.
  */
 @Configuration
-@EnableJpaRepositories 
+@EnableJpaRepositories
+@EnableAspectJAutoProxy(proxyTargetClass = true, exposeProxy = true)
 @EnableTransactionManagement
 public class SimpleJpaConfig {
 	
@@ -49,6 +59,11 @@ public class SimpleJpaConfig {
     @DependsOn("dataInitializer")
     public ShopService shopService(ProductRepository productRepository, OrderRepository orderRepository) {
         return new PeusdoShopServiceImpl(productRepository, orderRepository);
+    }
+    
+    @Bean
+    public LoggingAspects loggingAspects() {
+    	return new LoggingAspects();
     }
 
     /**
@@ -100,8 +115,8 @@ public class SimpleJpaConfig {
         Properties props = new Properties();
         props.setProperty("hibernate.hbm2ddl.auto", "create-drop"); //create, update, validate, none
         props.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQLDialect");
-        props.setProperty("hibernate.show_sql", "true");
-        props.setProperty("hibernate.format_sql", "true");
+//        props.setProperty("hibernate.show_sql", "true");
+//        props.setProperty("hibernate.format_sql", "true");
         return props;
     }
 
@@ -114,5 +129,14 @@ public class SimpleJpaConfig {
     @DependsOn("transactionManager")
     public DataInitializer dataInitializer(ProductRepository productRepository) {
         return new DataInitializer(productRepository);
+    }
+    
+    @PostConstruct
+    public void configureLogging() {
+    	LoggerContext context = (LoggerContext) LoggerFactory.getILoggerFactory();
+    	Logger springLogger = context.getLogger("org.springframework");
+    	springLogger.setLevel(Level.INFO);
+    	Logger hibernateLogger = context.getLogger("org.hibernate");
+    	hibernateLogger.setLevel(Level.WARN);
     }
 }

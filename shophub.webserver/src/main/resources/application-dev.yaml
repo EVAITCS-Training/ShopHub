@@ -1,0 +1,10 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/shophubdb
+    username: root
+    password: Gudmord92!
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
