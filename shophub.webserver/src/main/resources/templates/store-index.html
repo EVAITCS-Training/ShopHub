@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>
+		Shophub
+	</title>
+</head>
+<body>
+	<div>
+		<div>
+			<h1>
+				Shophub
+			</h1>
+		</div>
+		<div>
+			<div>
+				<h3>
+					Name:
+				</h3>
+				<h3>
+					Description
+				</h3>
+				<h3>
+					Price: 
+				</h3>
+				<h3>
+					Quantity: 
+				</h3>
+			</div>
+			<div th:each="product :${products}">
+				<ul>
+					<li>
+						<h4 th:text="${product.getName()}"></h4>
+					</li>
+					<li>
+						<p th:text="${product.getDescription()}"></p>
+					</li>
+					<li>
+						<p th:text="${product.getPrice()}"></p>
+					</li>
+					<li>
+						<p th:text="${product.getQuantity()}"></p>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
