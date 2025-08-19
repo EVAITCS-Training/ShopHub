@@ -11,6 +11,8 @@ import com.evaitcsmatt.shophub.webserver.dtos.ProductItem;
 import com.evaitcsmatt.shophub.webserver.services.ProductService;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
 @RequiredArgsConstructor
@@ -28,5 +30,11 @@ public class ProductController {
 	public String getStoreAddProduct(Model model) {
 		model.addAttribute("product", new PostNewProduct());
 		return "store-add";
+	}
+
+	@PostMapping(value = {"/store/add", "/store/add/"})
+	public String getStoreAddProduct(@ModelAttribute("product") PostNewProduct product) {
+		productService.createProduct(product);
+		return "redirect:/store";
 	}
 }
