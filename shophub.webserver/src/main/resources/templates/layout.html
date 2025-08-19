@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <title layout:title-pattern="$CONTENT_TITLE - Shophub">Shophub</title>
+    <link rel="stylesheet" th:href="@{/css/home.css}" />
+</head>
+<body>
+
+<!-- Navbar fragment -->
+<div th:replace="fragments/navbar :: navbar"></div>
+
+<!-- Main content injected here -->
+<div layout:fragment="body">
+    <!-- Default content can go here if needed -->
+</div>
+
+<!-- Footer fragment -->
+<div th:replace="fragments/footer :: footer"></div>
+
+</body>
+</html>
