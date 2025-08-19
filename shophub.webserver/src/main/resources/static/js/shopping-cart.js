@@ -1,7 +1,7 @@
+const shoppingCart = []
 document.addEventListener("DOMContentLoaded", () => {
     const productNames = document.getElementsByTagName("h4");
 
-    const shoppingCart = []
 
     Array.from(productNames).forEach(productName => {
         productName.addEventListener("click", () => {
@@ -18,5 +18,34 @@ document.addEventListener("DOMContentLoaded", () => {
             alert("Product added to cart: " + product.name);
         })
     })
+
+
+
+    const shoppingCartButton = document.getElementById("shopping-cart-button");
+    const shoppingCartContainer = document.getElementById("shopping-cart-container");
+    shoppingCartButton.addEventListener("click", () => {
+        if (shoppingCartContainer.classList.contains("open-cart")) {
+            shoppingCartContainer.classList.remove("open-cart");
+            shoppingCartContainer.classList.add("close-cart");
+            console.log("Shopping cart closed.");
+        } else {
+            shoppingCartContainer.classList.remove("close-cart");
+            shoppingCartContainer.classList.add("open-cart");
+            shoppingCartContainer.innerHTML = ""; // Clear previous content
+            shoppingCart.forEach(product => {
+                const productElement = document.createElement("div");
+                productElement.classList.add("cart-item");
+                productElement.innerHTML = `
+                    <h4>${product.name}</h4>
+                    <p>${product.price}</p>
+                    <p>Quantity: ${product.quantity}</p>
+                `;
+                shoppingCartContainer.appendChild(productElement);
+            })
+            console.log("Shopping cart opened.");
+        }
+    })
 })
+
+
 

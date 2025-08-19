@@ -7,6 +7,14 @@ html, body{
 
 }
 
+.open-cart {
+    display: block;
+}
+
+.close-cart {
+    display: none;
+}
+
 .navbar{
     background-color: #ADD8E6;
     color: white;

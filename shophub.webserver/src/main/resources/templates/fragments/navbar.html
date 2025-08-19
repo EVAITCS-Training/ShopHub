@@ -1,4 +1,4 @@
-
+<script th:src="@{/js/shopping-cart.js}"></script>
 <div th:fragment="navbar" class="navbar">
     <div class="navbar-content">
         <div class = "navbar">
@@ -8,6 +8,16 @@
             <div class="nav-right">
                 <a th:href="@{/}">Home</a>
                 <a th:href="@{/store}">Store</a>
+            </div>
+            <div>
+                <div>
+                    <h2  id="shopping-cart-button">
+                        🛒🛒🛒
+                    </h2>
+                    <div id="shopping-cart-container" class="shopping-cart-content close-cart">
+
+                    </div>
+                </div>
             </div>
         </div>
     </div>
