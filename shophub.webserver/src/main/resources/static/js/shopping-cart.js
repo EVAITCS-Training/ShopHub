@@ -7,6 +7,12 @@ document.addEventListener("DOMContentLoaded", () => {
         productName.addEventListener("click", () => {
             const productContainer = productName.closest('ul');
             const productElements = productContainer.querySelectorAll('li p');
+            const existingProduct = shoppingCart.find(el => el.name === productName.innerText);
+            if (existingProduct) {
+                existingProduct.quantity++;
+                alert("Product quantity has increased " + existingProduct.name)
+                return;
+            }
             const product = {
                 name: productName.innerText,
                 description: productElements[0].innerText, // First p tag (description)
@@ -42,10 +48,46 @@ document.addEventListener("DOMContentLoaded", () => {
                 `;
                 shoppingCartContainer.appendChild(productElement);
             })
+            const confirmButton = document.createElement("button");
+            confirmButton.onclick = sendShoppingCart();
+            confirmButton.innerText = "Confirm Order";
+            shoppingCartContainer.appendChild(confirmButton);
             console.log("Shopping cart opened.");
         }
     })
 })
+
+
+const sendShoppingCart = async () => {
+    let orderDto = {
+        orderRowDtoList: [],
+        total: 0
+    }
+    for (let i = 0; i < shoppingCart.length; i++) {
+        orderDto.total += shoppingCart[i].quantity * shoppingCart[i].price;
+        orderDto.orderRowDtoList.push(
+            {
+                productName: shoppingCart[i].name,
+                quantity: shoppingCart[i].quantity,
+                price: shoppingCart[i].price
+            }
+        )
+    }
+    const response = await fetch("api/order/", {
+        method: "POST",
+        body: JSON.stringify(orderDto),
+        headers: {
+            "Content-Type": "application/json"
+        }
+    })
+
+    if (response.status === 204) {
+        alert("Your order has been successfully sent.");
+        shoppingCart.clear();
+    } else {
+        alert("Something went wrong. Please try again later.");
+    }
+}
 
 
 
