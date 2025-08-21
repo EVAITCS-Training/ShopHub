@@ -11,10 +11,27 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
     @Bean
-    public SecurityFilterChain springSecurityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf.disable())
             .cors(cors -> cors.disable())
-                .authorizeHttpRequests(requests -> requests.anyRequest().permitAll());
+                .authorizeHttpRequests(requests ->
+                        requests
+                                .requestMatchers(
+                                        "/store",
+                                        "/register",
+                                        "/",
+                                        "/css/**",
+                                        "/js/**"
+                                )
+                                .permitAll()
+                                .requestMatchers("/api/order/")
+                                .authenticated()
+                                .anyRequest()
+                                .hasRole("ADMIN"))
+
+                .formLogin(form -> form
+                        .defaultSuccessUrl("/store")
+                        .permitAll());
         return http.build();
     }
 }
