@@ -3,38 +3,30 @@ package com.evaitcsmatt.shophub.webserver.controllers;
 import java.util.List;
 
 import com.evaitcsmatt.shophub.webserver.dtos.PostNewProduct;
-import org.springframework.stereotype.Controller;
+import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.*;
 
 import com.evaitcsmatt.shophub.webserver.dtos.ProductItem;
 import com.evaitcsmatt.shophub.webserver.services.ProductService;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
 
-@Controller
+@RestController
+@RequestMapping("/api/v1/product")
 @RequiredArgsConstructor
 public class ProductController {
 	private final ProductService productService;
 	
-	@GetMapping(value = {"/store", "/store/"})
-	public String getStoreIndex(Model model) {
+	@GetMapping(value = {"/"})
+	public ResponseEntity<List<ProductItem>> getStoreIndex() {
 		List<ProductItem> items = productService.getAllProducts();
-		model.addAttribute("products", items);
-		return "store-index";
+		return ResponseEntity.ok(items);
 	}
 
-	@GetMapping(value = {"/store/add", "/store/add/"})
-	public String getStoreAddProduct(Model model) {
-		model.addAttribute("product", new PostNewProduct());
-		return "store-add";
-	}
-
-	@PostMapping(value = {"/store/add", "/store/add/"})
-	public String getStoreAddProduct(@ModelAttribute("product") PostNewProduct product) {
+	@PostMapping(value = {"/add", "/add/"})
+	public ResponseEntity<Void> getStoreAddProduct(@RequestBody PostNewProduct product) {
 		productService.createProduct(product);
-		return "redirect:/store";
+		return ResponseEntity.noContent().build();
 	}
 }
