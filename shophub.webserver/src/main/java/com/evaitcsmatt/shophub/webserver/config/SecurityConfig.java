@@ -18,7 +18,7 @@ public class SecurityConfig {
                         requests
                                 .requestMatchers(
                                         "/api/v1/product/**",
-                                        "/api/v1/auth/register",
+                                        "/api/v1/auth/**",
                                         "/",
                                         "/css/**",
                                         "/js/**"
