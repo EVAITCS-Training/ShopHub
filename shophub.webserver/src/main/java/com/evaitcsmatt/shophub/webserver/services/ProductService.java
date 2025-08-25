@@ -3,6 +3,8 @@ package com.evaitcsmatt.shophub.webserver.services;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.evaitcsmatt.shophub.webserver.exceptions.ProductDuplitcationException;
+import com.evaitcsmatt.shophub.webserver.utils.ProductMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,14 +17,14 @@ import com.evaitcsmatt.shophub.webserver.repositories.ProductRepository;
 public class ProductService {
 	@Autowired
 	private ProductRepository productRepository;
+	@Autowired
+	private ProductMapper productMapper;
 	
 	public void createProduct(PostNewProduct product) {
-		Product newProduct = Product.builder()
-				.name(product.getName())
-				.description(product.getDescription())
-				.price(product.getPrice())
-				.quantity(product.getQuantity())
-				.build();
+		if (productRepository.existsByNameIgnoreCase(product.getName())) {
+			throw new ProductDuplitcationException("Product with the name " + product.getName() + " already exists!");
+		}
+		Product newProduct = productMapper.postNewProductToProduct(product);
 		productRepository.save(newProduct);
 	}
 	

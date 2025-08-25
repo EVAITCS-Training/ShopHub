@@ -35,6 +35,10 @@ dependencies {
 	runtimeOnly("com.mysql:mysql-connector-j")
 	annotationProcessor("org.projectlombok:lombok")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
+	testImplementation("org.mockito:mockito-core:5.19.0")
+	testImplementation("org.mockito:mockito-junit-jupiter:5.19.0")
+	testImplementation("io.rest-assured:rest-assured:5.5.6")
+	testImplementation("io.rest-assured:spring-mock-mvc:5.5.6")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
