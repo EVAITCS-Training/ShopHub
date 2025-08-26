@@ -29,4 +29,20 @@ public class ProductController {
 		productService.createProduct(product);
 		return ResponseEntity.noContent().build();
 	}
+
+	@DeleteMapping(value = {"/delete/{name}"})
+	public ResponseEntity<Void> deleteStoreProduct(@PathVariable String name) {
+		productService.deleteProduct(name);
+		return ResponseEntity.noContent().build();
+	}
+
+	@PutMapping("/update/{name}")
+	public ResponseEntity<Void> updateProduct(
+			@PathVariable String name,
+			@RequestBody ProductItem updatedProduct)
+	{
+		productService.updateProduct(name, updatedProduct);
+		System.out.println(updatedProduct);
+		return ResponseEntity.noContent().build();
+	}
 }

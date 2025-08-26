@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.evaitcsmatt.shophub.webserver.exceptions.ProductDuplitcationException;
+import com.evaitcsmatt.shophub.webserver.exceptions.ProductNotFound;
 import com.evaitcsmatt.shophub.webserver.utils.ProductMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -43,5 +44,26 @@ public class ProductService {
 		});
 		return items;
 	}
-	
+
+
+	public void deleteProduct(String name){
+		Product product = productRepository.findByNameIgnoreCase(name)
+				.orElseThrow(() -> new ProductNotFound("Product not found"));
+		productRepository.deleteByName(name);
+	}
+
+	public void updateProduct(String name, ProductItem updatedProduct){
+		Product product = productRepository.findByNameIgnoreCase(name)
+				.orElseThrow(() -> new ProductNotFound("Product not found"));
+		product.setName(updatedProduct.getName());
+		product.setDescription(updatedProduct.getDescription());
+		product.setPrice(updatedProduct.getPrice());
+		product.setQuantity(updatedProduct.getQuantity());
+		product.setSeasonal(updatedProduct.isSeasonal());
+		product.setSeason(updatedProduct.getSeason());
+		product.setSeasonBegin(updatedProduct.getSeasonBegin());
+		product.setSeasonEnd(updatedProduct.getSeasonEnd());
+
+		productRepository.save(product);
+	}
 }

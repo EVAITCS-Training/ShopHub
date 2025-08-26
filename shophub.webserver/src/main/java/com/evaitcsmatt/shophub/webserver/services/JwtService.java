@@ -3,6 +3,7 @@ package com.evaitcsmatt.shophub.webserver.services;
 import com.evaitcsmatt.shophub.webserver.config.JwtConfigProps;
 import com.evaitcsmatt.shophub.webserver.entities.UserCredential;
 import com.evaitcsmatt.shophub.webserver.repositories.UserCredentialRepository;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -16,6 +17,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
 
 @Service
 @RequiredArgsConstructor
@@ -33,6 +35,37 @@ public class JwtService {
         claims.put("email", userCredential.getEmail());
         claims.put("role", userCredential.getRole());
         return generateToken(claims, userCredential);
+    }
+
+    public String extractEmail(String token) {
+        return extractClaim(token, claims -> claims.get("email").toString());
+    }
+
+    public boolean validateToken(String token, UserCredential userCredential) {
+        final String email = extractEmail(token);
+        return (email.equalsIgnoreCase(userCredential.getEmail()) && !isTokenExpired(token));
+    }
+
+    private boolean isTokenExpired(String token) {
+        return extractExpiration(token).before(new Date());
+    }
+
+    private Date extractExpiration(String token) {
+        return extractClaim(token, Claims::getExpiration);
+    }
+
+    private <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
+        final Claims claims = extractAllClaims(token);
+        return claimsResolver.apply(claims);
+    }
+
+    private Claims extractAllClaims(String token) {
+        return Jwts
+                .parser()
+                .verifyWith(getSecretKey())
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
     }
 
     private String generateToken(Map<String, Object> claims, UserCredential userCredential) {
