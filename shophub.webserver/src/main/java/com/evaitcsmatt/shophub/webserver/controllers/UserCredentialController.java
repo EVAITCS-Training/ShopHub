@@ -22,7 +22,7 @@ public class UserCredentialController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Authentication> login(@RequestBody AuthRequest request) {
+    public ResponseEntity<String> login(@RequestBody AuthRequest request) {
         return ResponseEntity.ok(userCredentialService.login(request));
     }
 }

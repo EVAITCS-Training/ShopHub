@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class UserCredentialService {
     private final UserCredentialRepository userCredentialRepository;
+    private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
 
@@ -27,13 +28,13 @@ public class UserCredentialService {
         return "User Credential Created Successfully";
     }
 
-    public Authentication login(AuthRequest request) {
+    public String login(AuthRequest request) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.email(),
                         request.password()
                 )
         );
-        return authentication;
+        return jwtService.generateToken(request.email());
     }
 }
