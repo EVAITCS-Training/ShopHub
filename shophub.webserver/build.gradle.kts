@@ -54,6 +54,11 @@ tasks.withType<Test> {
 	useJUnitPlatform()
 }
 
+tasks.jar {
+    enabled = false
+    archiveClassifier.set("")
+}
+
 sonar {
 	properties {
 		property("sonar.projectKey", "Test")
