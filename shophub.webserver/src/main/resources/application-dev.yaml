@@ -9,5 +9,11 @@ spring:
       ddl-auto: update
     show-sql: true
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, metrics, loggers, beans, env, info
+
 jwt:
   secret: 71711f3c5e1b9079ab16f833226cd12027a50a8110b2a8054f1eaf09383b2f7d
