@@ -1,14 +1,22 @@
 import { Box, Container, Typography } from '@mui/material'
 import { useQuery } from '@tanstack/react-query'
 import axios from 'axios'
-import React from 'react'
 import ProductCard from './ProductCard'
+import { useCart } from '../context/CartContext'
+
+interface Product {
+    id: number | undefined
+    name: string
+    price: number
+    description: string
+}
 
 // State vs Props
 // State: Local, private, controlled by the component
 // Props: External, controlled by whatever renders the component, read-only or immutable
 export default function ProductIndex() {
-    const {data, error, isLoading } = useQuery({
+    const {addToCart , cartItems} = useCart();
+    const {data, error, isLoading } = useQuery<Product[]>({
         queryKey: ['products'],
         queryFn: async () => {
             const res = await axios.get(import.meta.env.VITE_API_URL + 'product/')
@@ -29,7 +37,10 @@ export default function ProductIndex() {
         </Typography>
         <Box sx={{ mt: 4, display: 'flex', flexDirection: 'row', flexWrap: 'wrap', gap: 2, rowGap: 2}}>
             {
-                data?.map(product => {return <ProductCard key={product.id} name={product.name} price={product.price} description={product.description} />})
+                data?.map(product => {return <ProductCard key={product.id} item={product} addToCart={() =>{
+                    addToCart({ ...product, quantity: 1 })
+                    console.log("Cart items after adding: ", cartItems);
+                } }/>})
             }
         </Box>
     </Container>

@@ -31,19 +31,21 @@ public class SecurityConfig {
             .cors(cors -> cors.configurationSource(corFilter()))
                 .authorizeHttpRequests(requests ->
                         requests
-                                .requestMatchers(
-                                        "/api/v1/product/**",
-                                        "/api/v1/auth/**",
-                                        "/",
-                                        "/css/**",
-                                        "/js/**",
-                                        "/actuator/**"
-                                )
-                                .permitAll()
-                                .requestMatchers("/api/v1/order/")
-                                .authenticated()
-                                .anyRequest()
-                                .hasRole("ADMIN"))
+//                                .requestMatchers(
+//                                        "/api/v1/product/**",
+//                                        "/api/v1/auth/**",
+//                                        "/",
+//                                        "/css/**",
+//                                        "/js/**",
+//                                        "/actuator/**"
+//                                )
+//                                .permitAll()
+//                                .requestMatchers("/api/v1/order/")
+//                                .authenticated()
+//                                .anyRequest()
+//                                .hasRole("ADMIN")
+                                .anyRequest().permitAll()
+                )
                 .sessionManagement(ses -> ses.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
