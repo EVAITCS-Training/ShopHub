@@ -1,8 +1,10 @@
-import { Box, Container, Typography } from '@mui/material'
+import { Box, Button, Container, Typography } from '@mui/material'
 import { useQuery } from '@tanstack/react-query'
 import axios from 'axios'
 import ProductCard from './ProductCard'
 import { useCart } from '../context/CartContext'
+import { useState } from 'react'
+import AddProduct from './AddProduct'
 
 interface Product {
     id: number | undefined
@@ -15,6 +17,7 @@ interface Product {
 // State: Local, private, controlled by the component
 // Props: External, controlled by whatever renders the component, read-only or immutable
 export default function ProductIndex() {
+    const [openAddProduct, setOpenAddProduct] = useState(false);
     const {addToCart , cartItems} = useCart();
     const {data, error, isLoading } = useQuery<Product[]>({
         queryKey: ['products'],
@@ -28,6 +31,10 @@ export default function ProductIndex() {
         }
     })
 
+    const handleClose = () => {
+        setOpenAddProduct(false)
+    }
+
     if (isLoading) return <div>Loading...</div>
     if (error) return <div>Error: {(error as Error).message}</div>
   return (
@@ -35,6 +42,9 @@ export default function ProductIndex() {
         <Typography variant='h3'>
             Shophub Products
         </Typography>
+        <Button onClick={() =>setOpenAddProduct(true)}>
+            Add Product
+        </Button>
         <Box sx={{ mt: 4, display: 'flex', flexDirection: 'row', flexWrap: 'wrap', gap: 2, rowGap: 2}}>
             {
                 data?.map(product => {return <ProductCard key={product.id} item={product} addToCart={() =>{
@@ -43,6 +53,7 @@ export default function ProductIndex() {
                 } }/>})
             }
         </Box>
+        <AddProduct open={openAddProduct} handleClose={handleClose} />
     </Container>
   )
 }
