@@ -3,6 +3,8 @@ import './App.css'
 import LandingPage from './static/LandingPage'
 import ProductIndex from './components/ProductIndex'
 import NavBar from './static/NavBar'
+import Register from './components/Register'
+import Login from './components/Login'
 
 function App() {
 
@@ -12,6 +14,8 @@ function App() {
       <Routes>
         <Route path='/' element={<LandingPage />} />
         <Route path='/products' element={<ProductIndex /> } />
+        <Route path='/register' element={<Register />} />
+        <Route path='/login' element={<Login />} />
       </Routes>
     </>
   )
