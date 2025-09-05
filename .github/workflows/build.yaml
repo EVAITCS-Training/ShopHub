@@ -80,7 +80,7 @@ jobs:
                   sudo systemctl stop nginx || echo "Nginx not running."
                   
                   echo "Installing/updating nginx..."
-                  sudo yum update
+                  sudo yum update -y
                   sudo yum install nginx -y
                   
                   echo "Starting Spring Boot backend..."
@@ -94,7 +94,7 @@ jobs:
                   nohup java -jar "$JAR_FILE" --spring.profiles.active=prod > shophub.log 2>&1 &
                   
                   echo "Configuring Nginx for React frontend..."
-                  sudo tee /etc/nginx/sites-available/shophub > /dev/null <<EOF
+                  sudo tee /etc/nginx/conf.d/shophub.conf > /dev/null <<EOF
                   server {
                       listen 80;
                       server_name _;
@@ -117,9 +117,7 @@ jobs:
                   }
                   EOF
                   
-                  # Enable the site and restart nginx
-                  sudo ln -sf /etc/nginx/sites-available/shophub /etc/nginx/sites-enabled/
-                  sudo rm -f /etc/nginx/sites-enabled/default
+                  # Test and restart nginx
                   sudo nginx -t && sudo systemctl start nginx && sudo systemctl enable nginx
                   
                   echo "Deployment complete!"
