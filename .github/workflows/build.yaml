@@ -23,7 +23,7 @@ jobs:
             - name: Set up Node.js
               uses: actions/setup-node@v4
               with:
-                  node-version: '22'
+                  node-version: '18'
                   cache: 'npm'
                   cache-dependency-path: 'frontend/package-lock.json'
                   
@@ -79,6 +79,10 @@ jobs:
                   pkill -f 'shophub.webserver-*\.jar' || echo "No existing backend service to stop."
                   sudo systemctl stop nginx || echo "Nginx not running."
                   
+                  echo "Installing/updating nginx..."
+                  sudo apt update
+                  sudo apt install nginx -y
+                  
                   echo "Starting Spring Boot backend..."
                   cd /home/${{ secrets.EC2_USER }}/
                   JAR_FILE=$(ls shophub.webserver-*.jar | head -n 1)
@@ -116,7 +120,7 @@ jobs:
                   # Enable the site and restart nginx
                   sudo ln -sf /etc/nginx/sites-available/shophub /etc/nginx/sites-enabled/
                   sudo rm -f /etc/nginx/sites-enabled/default
-                  sudo nginx -t && sudo systemctl start nginx
+                  sudo nginx -t && sudo systemctl start nginx && sudo systemctl enable nginx
                   
                   echo "Deployment complete!"
                   echo "Frontend available at: http://your-ec2-public-ip"
