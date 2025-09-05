@@ -42,9 +42,10 @@ export default function ProductIndex() {
         <Typography variant='h3'>
             Shophub Products
         </Typography>
-        <Button onClick={() =>setOpenAddProduct(true)}>
+        { sessionStorage.getItem("jwt") ?
+            <Button onClick={() =>setOpenAddProduct(true)}>
             Add Product
-        </Button>
+        </Button> : null}
         <Box sx={{ mt: 4, display: 'flex', flexDirection: 'row', flexWrap: 'wrap', gap: 2, rowGap: 2}}>
             {
                 data?.map(product => {return <ProductCard key={product.id} item={product} addToCart={() =>{

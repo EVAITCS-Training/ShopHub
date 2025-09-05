@@ -101,6 +101,7 @@ function NavBar() {
               </Link>
             </ListItem>
 
+            { sessionStorage.getItem("jwt") ? 
             <ListItem sx={{ width: "auto", p: 0 }}>
               <Button
                 onClick={() => setCartOpen(!cartOpen)}
@@ -108,7 +109,7 @@ function NavBar() {
               >
                 Cart ({cart.cartItems.length})
               </Button>
-            </ListItem>
+            </ListItem> : null }
           </List>
         </Box>
       </Box>

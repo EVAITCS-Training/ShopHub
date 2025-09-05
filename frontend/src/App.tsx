@@ -5,6 +5,7 @@ import ProductIndex from './components/ProductIndex'
 import NavBar from './static/NavBar'
 import Register from './components/Register'
 import Login from './components/Login'
+import ProtectedRoute from './components/ProtectedRoute'
 
 function App() {
 
@@ -13,7 +14,11 @@ function App() {
       <NavBar />
       <Routes>
         <Route path='/' element={<LandingPage />} />
-        <Route path='/products' element={<ProductIndex /> } />
+        <Route path='/products' element={
+          //<ProtectedRoute>
+            <ProductIndex />
+          //</ProtectedRoute>
+           } />
         <Route path='/register' element={<Register />} />
         <Route path='/login' element={<Login />} />
       </Routes>
