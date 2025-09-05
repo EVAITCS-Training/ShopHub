@@ -32,9 +32,9 @@ function NavBar() {
       orderRowDtoList.push({
         productName: item.name,
         price: item.price,
-        quantity: item.quantity
+        quantity: item.quantity as number
       })
-      total = total + (item.price * item.quantity);
+      total = total + (item.price * (item.quantity ?? 1));
     })
     const orderDto = {
       orderRowDtoList: orderRowDtoList,
@@ -151,7 +151,7 @@ function NavBar() {
                   </Typography>
                 </Box>
                 <Typography variant="body1">
-                  ${(item.quantity * item.price).toFixed(2)}
+                  ${((item.price * (item.quantity ?? 1)).toFixed(2))}
                 </Typography>
               </Box>
             ))

@@ -1,4 +1,4 @@
-name: Build and Deploy to EC2
+name: Build and Deploy Full Stack App to EC2
 
 on:
     push:
@@ -11,16 +11,41 @@ jobs:
         steps:
             - name: Checkout code
               uses: actions/checkout@v4
+              
+            # Setup Java for Spring Boot backend
             - name: Set up Java 21
               uses: actions/setup-java@v4
               with:
                   java-version: '21'
                   distribution: 'temurin'
-            - name: Build with Gradle
+                  
+            # Setup Node.js for React frontend
+            - name: Set up Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: '22'
+                  cache: 'npm'
+                  cache-dependency-path: 'frontend/package-lock.json'
+                  
+            # Build Spring Boot backend
+            - name: Build Spring Boot with Gradle
               run: |
                cd shophub.webserver
                chmod +x ./gradlew
                ./gradlew clean build -x test
+               
+            # Build React frontend
+            - name: Install frontend dependencies
+              run: |
+                cd frontend
+                npm ci
+                
+            - name: Build React app
+              run: |
+                cd frontend
+                npm run build
+                
+            # Deploy backend JAR to EC2
             - name: Copy JAR to EC2
               uses: appleboy/scp-action@v0.1.7
               with:
@@ -30,6 +55,19 @@ jobs:
                 source: "shophub.webserver/build/libs/shophub.webserver-*.jar"
                 target: "/home/${{ secrets.EC2_USER }}/"
                 strip_components: 3
+                
+            # Deploy frontend build to EC2
+            - name: Copy React build to EC2
+              uses: appleboy/scp-action@v0.1.7
+              with:
+                host: ${{ secrets.EC2_HOST }}
+                username: ${{ secrets.EC2_USER }}
+                key: ${{ secrets.EC2_SSH_KEY }}
+                source: "frontend/dist/*"
+                target: "/home/${{ secrets.EC2_USER }}/frontend/"
+                strip_components: 2
+                
+            # Start services on EC2
             - name: Deploy on EC2
               uses: appleboy/ssh-action@v0.1.7
               with:
@@ -37,9 +75,11 @@ jobs:
                 username: ${{ secrets.EC2_USER }}
                 key: ${{ secrets.EC2_SSH_KEY }}
                 script: |
-                  echo "Stopping existing webserver service..."
-                  pkill -f 'shophub.webserver-*\.jar' || echo "No existing service to stop."
-                  echo "Starting new webserver service..."
+                  echo "Stopping existing services..."
+                  pkill -f 'shophub.webserver-*\.jar' || echo "No existing backend service to stop."
+                  sudo systemctl stop nginx || echo "Nginx not running."
+                  
+                  echo "Starting Spring Boot backend..."
                   cd /home/${{ secrets.EC2_USER }}/
                   JAR_FILE=$(ls shophub.webserver-*.jar | head -n 1)
                   if [ -z "$JAR_FILE" ]; then
@@ -48,8 +88,36 @@ jobs:
                   fi
                   echo "Running JAR file: $JAR_FILE"
                   nohup java -jar "$JAR_FILE" --spring.profiles.active=prod > shophub.log 2>&1 &
-                  echo "Webserver service started successfully."
-                  echo "Deployment complete."
-                  echo "You can check the logs with 'tail -f shophub.log'."
-
-
+                  
+                  echo "Configuring Nginx for React frontend..."
+                  sudo tee /etc/nginx/sites-available/shophub > /dev/null <<EOF
+                  server {
+                      listen 80;
+                      server_name _;
+                      
+                      # Serve React frontend
+                      location / {
+                          root /home/${{ secrets.EC2_USER }}/frontend;
+                          try_files \$uri \$uri/ /index.html;
+                          add_header Cache-Control "no-cache, no-store, must-revalidate";
+                      }
+                      
+                      # Proxy API requests to Spring Boot
+                      location /api/ {
+                          proxy_pass http://localhost:8080;
+                          proxy_set_header Host \$host;
+                          proxy_set_header X-Real-IP \$remote_addr;
+                          proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+                          proxy_set_header X-Forwarded-Proto \$scheme;
+                      }
+                  }
+                  EOF
+                  
+                  # Enable the site and restart nginx
+                  sudo ln -sf /etc/nginx/sites-available/shophub /etc/nginx/sites-enabled/
+                  sudo rm -f /etc/nginx/sites-enabled/default
+                  sudo nginx -t && sudo systemctl start nginx
+                  
+                  echo "Deployment complete!"
+                  echo "Frontend available at: http://your-ec2-public-ip"
+                  echo "Backend logs: tail -f shophub.log"

@@ -5,7 +5,6 @@ import ProductIndex from './components/ProductIndex'
 import NavBar from './static/NavBar'
 import Register from './components/Register'
 import Login from './components/Login'
-import ProtectedRoute from './components/ProtectedRoute'
 
 function App() {
 

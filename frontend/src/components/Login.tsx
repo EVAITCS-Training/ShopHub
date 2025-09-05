@@ -22,7 +22,7 @@ export default function Login() {
         },
         validationSchema: validationSchema,
         onSubmit: async (values: AuthRequest) => {
-            const res = await axios.post(import.meta.env.VITE_API_URL + "auth/login",
+            await axios.post(import.meta.env.VITE_API_URL + "auth/login",
                 values,
                 {
                     headers: {

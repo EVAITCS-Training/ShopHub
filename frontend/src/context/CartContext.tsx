@@ -5,13 +5,13 @@ export type CartItem = {
     name: string;
     price: number;
     description: string;
-    quantity: number;
+    quantity?: number;
 }
 
 type CartContextType = {
     cartItems: CartItem[];
     addToCart: (item: CartItem) => void;
-    removeFromCart: (id: number | undefined) => void;
+    removeFromCart: (name: string) => void;
     clearCart: () => void;
 }
 
@@ -26,7 +26,9 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
             const existingItem = prevItems.find((i) => i.name === item.name);
             if (existingItem) {
                 return prevItems.map((i) =>
-                    i.name === item.name ? { ...i, quantity: i.quantity + item.quantity } : i
+                    i.name === item.name
+                        ? { ...i, quantity: (i.quantity ?? 0) + (item.quantity ?? 1) }
+                        : i
                 );
             }
             console.log("Current cart items: ", prevItems);
