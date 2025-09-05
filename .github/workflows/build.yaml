@@ -80,8 +80,8 @@ jobs:
                   sudo systemctl stop nginx || echo "Nginx not running."
                   
                   echo "Installing/updating nginx..."
-                  sudo apt update
-                  sudo apt install nginx -y
+                  sudo yum update
+                  sudo yum install nginx -y
                   
                   echo "Starting Spring Boot backend..."
                   cd /home/${{ secrets.EC2_USER }}/
